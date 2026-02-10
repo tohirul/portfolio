@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Craftysoft",
-  description: "Sotware Development Company",
+  title: "Tohirul",
+  description: "Web Developer",
 };
 
 export default function RootLayout({
