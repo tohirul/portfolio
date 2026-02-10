@@ -298,12 +298,11 @@ function checkCollision(
   const key = `${x},${y}`;
   const intervals = registry.get(key);
 
-  // CRITICAL FIX: Guard against "undefined" or legacy "number" data in registry
   if (!intervals || !Array.isArray(intervals)) return false;
 
   // Check overlap with ANY existing interval
   for (const [s, e] of intervals) {
-    if (startT < e && endT > s) return true; // Collision!
+    if (startT < e && endT > s) return true;
   }
   return false;
 }
