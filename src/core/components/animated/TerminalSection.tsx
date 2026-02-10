@@ -171,7 +171,7 @@ export function TerminalSection() {
               rotateY,
             }}
             transition={{ type: "spring", stiffness: 200, damping: 15 }}
-            className="absolute -bottom-6 -right-8 bg-slate-900 border border-emerald-500/30 p-4 rounded-lg shadow-2xl flex items-center gap-3 z-20"
+            className="absolute -bottom-6 right-0 md:-right-8 bg-slate-900 border border-emerald-500/30 p-4 rounded-lg shadow-2xl flex items-center gap-3 z-20"
           >
             <div className="bg-emerald-500/20 p-2 rounded-md">
               <Cpu className="h-6 w-6 text-emerald-400" />
