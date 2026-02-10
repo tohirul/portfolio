@@ -1,0 +1,32 @@
+```
+└── 📁agency-portfolio
+    └── 📁docs
+        └── 📁adr
+            ├── ADR-20260209-api-style.md
+            ├── ADR-20260209-application-style.md
+            ├── ADR-20260209-content-strategy.md
+            ├── ADR-20260209-database-strategy.md
+    └── 📁public
+        ├── file.svg
+        ├── globe.svg
+        ├── next.svg
+        ├── vercel.svg
+        ├── window.svg
+    └── 📁src
+        └── 📁app
+            ├── favicon.ico
+            ├── globals.css
+            ├── layout.tsx
+            ├── page.tsx
+    ├── .gitignore
+    ├── ai.project.json
+    ├── eslint.config.mjs
+    ├── LICENSE
+    ├── next-env.d.ts
+    ├── next.config.ts
+    ├── package-lock.json
+    ├── package.json
+    ├── postcss.config.mjs
+    ├── README.md
+    └── tsconfig.json
+```

@@ -1,0 +1,215 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  /* --- 1. BASE SYSTEM (Preserving your Shadcn defaults) --- */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  /* UI Primitives */
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Standard Components */
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* --- 2. AGENCY BRAND PALETTE (Cyber-Minimalism) --- */
+  /* The "Magic" Accent - High Tech Emerald */
+  --color-brand-neon: oklch(0.7 0.19 145);
+  /* Deep Logic - Darker than standard slate for code blocks */
+  --color-brand-deep: oklch(0.13 0.02 260);
+  /* UI Chrome - For terminal borders/glassmorphism */
+  --color-brand-glass: oklch(0.2 0.02 260 / 0.5);
+
+  /* Semantic Aliases for Data/Terminal */
+  --color-status-online: oklch(0.65 0.22 145); /* Green */
+  --color-status-error: oklch(0.63 0.22 30); /* Red */
+  --color-status-warn: oklch(0.82 0.15 80); /* Amber */
+  --color-syntax-key: oklch(0.7 0.15 300); /* Magenta */
+  --color-syntax-str: oklch(0.85 0.12 85); /* Yellow */
+
+  /* --- 3. SMART BOX MODEL (Layout Architecture) --- */
+
+  /* Responsive Section Spacing (Mobile / Tablet / Desktop) */
+  --spacing-section-sm: 4rem;
+  --spacing-section: 6rem;
+  --spacing-section-lg: 10rem;
+
+  /* Component Spacing Rhythm */
+  --spacing-flow-sm: 0.75rem;
+  --spacing-flow: 1.5rem;
+  --spacing-flow-lg: 3rem;
+
+  /* Container Widths - Architectural Stops */
+  --width-prose-arch: 65ch; /* Optimal reading width */
+  --width-container-sm: 640px;
+  --width-container-md: 768px;
+  --width-container-lg: 1024px;
+  --width-container-xl: 1280px;
+  --width-container-2xl: 1400px; /* Extra wide for architectural diagrams */
+
+  /* Radii */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+}
+
+/* --- THEME DEFINITIONS --- */
+:root {
+  --radius: 0.5rem; /* Slightly sharper than standard 0.625 for tech feel */
+
+  /* Light Mode (Clean, documentation style) */
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.13 0.02 260); /* Deep slate text */
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.13 0.02 260);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.13 0.02 260);
+  --primary: oklch(0.13 0.02 260);
+  --primary-foreground: oklch(0.98 0 0);
+  --secondary: oklch(0.96 0.01 260);
+  --secondary-foreground: oklch(0.13 0.02 260);
+  --muted: oklch(0.96 0.01 260);
+  --muted-foreground: oklch(0.5 0.02 260);
+  --accent: oklch(0.96 0.01 260);
+  --accent-foreground: oklch(0.13 0.02 260);
+  --destructive: oklch(0.6 0.2 30);
+  --border: oklch(0.92 0.01 260);
+  --input: oklch(0.92 0.01 260);
+  --ring: oklch(0.13 0.02 260);
+
+  /* Sidebar Light */
+  --sidebar: oklch(0.98 0 0);
+  --sidebar-foreground: oklch(0.13 0.02 260);
+  --sidebar-primary: oklch(0.13 0.02 260);
+  --sidebar-primary-foreground: oklch(0.98 0 0);
+  --sidebar-accent: oklch(0.96 0.01 260);
+  --sidebar-accent-foreground: oklch(0.13 0.02 260);
+  --sidebar-border: oklch(0.92 0.01 260);
+  --sidebar-ring: oklch(0.13 0.02 260);
+}
+
+.dark {
+  /* Dark Mode (The IDE Environment) */
+  --background: oklch(0.1 0.01 260); /* Deepest slate, almost black */
+  --foreground: oklch(0.98 0 0);
+  --card: oklch(0.13 0.02 260); /* Editor background */
+  --card-foreground: oklch(0.98 0 0);
+  --popover: oklch(0.13 0.02 260);
+  --popover-foreground: oklch(0.98 0 0);
+  --primary: oklch(0.98 0 0);
+  --primary-foreground: oklch(0.13 0.02 260);
+  --secondary: oklch(0.2 0.02 260); /* Panel backgrounds */
+  --secondary-foreground: oklch(0.98 0 0);
+  --muted: oklch(0.2 0.02 260);
+  --muted-foreground: oklch(0.6 0.02 260); /* Comments color */
+  --accent: oklch(0.2 0.02 260);
+  --accent-foreground: oklch(0.98 0 0);
+  --destructive: oklch(0.4 0.15 30);
+  --border: oklch(0.2 0.02 260);
+  --input: oklch(0.2 0.02 260);
+  --ring: oklch(0.7 0.19 145); /* Neon focus ring */
+
+  /* Sidebar Dark */
+  --sidebar: oklch(0.11 0.015 260);
+  --sidebar-foreground: oklch(0.98 0 0);
+  --sidebar-primary: oklch(0.7 0.19 145);
+  --sidebar-primary-foreground: oklch(0.98 0 0);
+  --sidebar-accent: oklch(0.2 0.02 260);
+  --sidebar-accent-foreground: oklch(0.98 0 0);
+  --sidebar-border: oklch(0.2 0.02 260);
+  --sidebar-ring: oklch(0.7 0.19 145);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+}
+
+/* =============================
+   FRAMER GRID TRACER — FINAL
+   ============================= */
+/* grid-tracer.css */
+
+.tracer-container {
+  /* This creates the "infinite" feel by fading edges */
+  mask-image: radial-gradient(circle at center, black 60%, transparent 100%);
+  -webkit-mask-image: radial-gradient(
+    circle at center,
+    black 60%,
+    transparent 100%
+  );
+}
+
+.grid-head {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+
+  /* WHITE HOT CORE */
+  background: white;
+
+  /* Massive Glow */
+  box-shadow:
+    0 0 10px 2px var(--color-brand-neon),
+    0 0 20px 5px var(--color-brand-neon);
+
+  transform: translate(-50%, -50%);
+  z-index: 20;
+
+  /* Blending makes it look like light */
+  mix-blend-mode: plus-lighter;
+}
+
+.grid-tail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-brand-neon);
+  transform: translate(-50%, -50%);
+  z-index: 10;
+
+  /* Softens the edges of the segments */
+  filter: blur(1px);
+
+  /* CRITICAL: Overlapping tails will turn WHITE */
+  mix-blend-mode: plus-lighter;
+}

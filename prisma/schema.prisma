@@ -1,0 +1,13 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model test_no_rls {
+  id   BigInt @id @default(autoincrement())
+  name String @db.VarChar
+}

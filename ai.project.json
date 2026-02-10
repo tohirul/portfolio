@@ -1,0 +1,89 @@
+{
+  "meta": {
+    "project_name": "Agency Portfolio",
+    "description": "",
+    "project_type": "web_app",
+    "project_stage": "active",
+    "owner": "tohirul",
+    "last_updated": "2026-02-09",
+    "stability_target": "high"
+  },
+  "direction": {
+    "primary_goal": "Showcase agency work and capture leads via a custom CMS.",
+    "secondary_goals": [
+      "Achieve 100/100 Lighthouse Performance score",
+      "Ensure CMS is usable by non-technical marketing staff",
+      "Zero-layout-shift (CLS) transitions"
+    ],
+    "explicit_non_goals": [
+      "Real-time chat features",
+      "User accounts (other than Admin)",
+      "Microservices architecture"
+    ],
+    "success_metrics": [
+      "Page load under 1.5s",
+      "Admin dashboard creates a case study in < 2 mins"
+    ]
+  },
+  "architecture": {
+    "application_style": "modular_monolith",
+    "style_locked": true,
+    "module_system": "feature_based",
+    "module_rules": {
+      "cross_module_imports": false,
+      "shared_kernel_allowed": true
+    },
+    "deployment_model": "single_service",
+    "monorepo": false,
+    "architecture_locked": true
+  },
+  "runtime": {
+    "primary_language": "typescript",
+    "secondary_languages": [],
+    "execution_environment": ["browser", "node", "server"]
+  },
+  "tooling": {
+    "languages": ["typescript", "markdown", "json", "yaml", "html", "css"],
+    "frameworks": ["nextjs", "react", "tailwindcss", "prisma"],
+    "ui": {
+      "framework": "react",
+      "styling": "tailwindcss",
+      "component_library": "shadcn/ui",
+      "ui_locked": true
+    },
+    "state_management": {
+      "pattern": "server-actions-and-context",
+      "locked": true
+    },
+    "api": {
+      "style": "rest",
+      "ownership": "backend_owned",
+      "versioning": "url",
+      "locked": true
+    },
+    "data": {
+      "storage_type": "postgres",
+      "database": "postgres",
+      "migration_strategy": "prisma-migrate",
+      "locked": true
+    }
+  },
+  "workflow": {
+    "allowed_operations": ["code_review", "bug_fix", "refactor"],
+    "requires_adr_for": [
+      "architecture",
+      "api_style_change",
+      "data_model_change",
+      "cross_module_refactor"
+    ]
+  },
+  "ai_constraints": {
+    "optimization_priorities": ["correctness", "maintainability"],
+    "explicitly_forbidden_suggestions": [
+      "new_framework",
+      "new_language",
+      "architecture_change"
+    ],
+    "assumption_policy": "no-assumptions"
+  }
+}
