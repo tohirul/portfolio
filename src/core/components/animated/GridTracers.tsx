@@ -16,12 +16,12 @@ import {
 
 const GRID_SIZE = 30;
 const STROKE_WIDTH = 0.3;
-const TRAIL_LENGTH = 120; // Visual length of the data packet
-const SPEED = 150; // Pixels per second
+const TRAIL_LENGTH = 80;
+const SPEED = 100;
 
 // How long a segment stays "hot" (blocked) after the head passes
 // Formula: (Trail Length / Speed) + Safety Buffer
-const TRAIL_DURATION = (TRAIL_LENGTH / SPEED) * 1000 + 200;
+const TRAIL_DURATION = (TRAIL_LENGTH / SPEED) * 1000 + 500;
 
 const COLORS = ["var(--color-brand-neon)", "#ffffff", "#09aa"];
 
@@ -118,7 +118,7 @@ export function GridTracers() {
           </filter>
         </defs>
 
-        {Array.from({ length: 15 }).map((_, i) => (
+        {Array.from({ length: 25 }).map((_, i) => (
           <TracerAgent
             key={i}
             screenWidth={size.w}
