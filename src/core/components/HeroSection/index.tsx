@@ -1,12 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils"; // Adjusted to standard shadcn path, verify your utils path
 import {
   Terminal,
   ArrowRight,
-  Cpu,
-  AlertTriangle,
-  XCircle,
-  CheckCircle2,
 } from "lucide-react";
 import { GridTracers } from "../animated/GridTracers";
 import { TerminalSection } from "../animated/TerminalSection";
