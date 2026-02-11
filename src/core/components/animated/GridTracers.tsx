@@ -15,7 +15,7 @@ import {
    ============================= */
 
 const GRID_SIZE = 30;
-const STROKE_WIDTH = 0.3;
+const STROKE_WIDTH = 0.2;
 const TRAIL_LENGTH = 80;
 const SPEED = 100;
 

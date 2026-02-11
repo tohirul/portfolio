@@ -6,7 +6,11 @@ import {
 import { GridTracers } from "../animated/GridTracers";
 import { TerminalSection } from "../animated/TerminalSection";
 
-export default function HeroSection() {
+interface HeroSectionProps {
+  onAuditRequest?: (url: string) => void;
+}
+
+export default function HeroSection({ onAuditRequest }: HeroSectionProps) {
   return (
     <section className="relative w-full min-h-[100vh] flex items-center justify-center bg-slate-950 overflow-hidden py-24 lg:py-32">
       {/* Background Grid Pattern - Hardcoded specifically for the dark look */}
@@ -77,7 +81,7 @@ export default function HeroSection() {
         </div>
 
         {/* --- RIGHT CONTENT: TERMINAL --- */}
-        <TerminalSection />
+        <TerminalSection onRunAudit={onAuditRequest} />
       </div>
     </section>
   );

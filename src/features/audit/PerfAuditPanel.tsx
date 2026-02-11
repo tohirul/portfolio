@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, useMemo, useState, ChangeEvent } from 'react';
+import { FormEvent, useMemo, useState, ChangeEvent, useEffect, useRef } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { useRunPerfAuditMutation } from '@/lib/redux/apis/auditsApi';
@@ -23,28 +23,59 @@ const isPerfAudit = (audit: Audit | undefined): audit is Audit & { details: Perf
   return Boolean(audit && audit.key === 'perf' && 'metrics' in audit.details);
 };
 
-export const PerfAuditPanel = () => {
+interface PerfAuditPanelProps {
+  prefillUrl?: string;
+  autoRunNonce?: number;
+  onPrefillConsumed?: () => void;
+}
+
+export const PerfAuditPanel = ({
+  prefillUrl,
+  autoRunNonce,
+  onPrefillConsumed,
+}: PerfAuditPanelProps) => {
   const [url, setUrl] = useState('');
   const [timeoutMs, setTimeoutMs] = useState('0');
   const [pageSpeedApiKey, setPageSpeedApiKey] = useState('');
+  const lastHandledAutoRunNonce = useRef(0);
 
   const [runPerfAudit, { data, isLoading, error }] = useRunPerfAuditMutation();
+  const activeUrl = prefillUrl ?? url;
 
   const perfAudit = useMemo(() => data?.audits.find((audit) => audit.key === 'perf'), [data]);
   const errorMessage = getErrorMessage(error);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!url || isLoading) return;
+    if (!activeUrl || isLoading) return;
 
     await runPerfAudit({
-      url,
+      url: activeUrl,
       timeoutMs: Number(timeoutMs) || 0,
       pageSpeedApiKey: pageSpeedApiKey || undefined,
     });
   };
 
-  const handleUrlChange = (event: ChangeEvent<HTMLInputElement>) => setUrl(event.target.value);
+  useEffect(() => {
+    if (!prefillUrl || !autoRunNonce || isLoading) return;
+    if (lastHandledAutoRunNonce.current === autoRunNonce) return;
+
+    lastHandledAutoRunNonce.current = autoRunNonce;
+
+    void runPerfAudit({
+      url: prefillUrl,
+      timeoutMs: Number(timeoutMs) || 0,
+      pageSpeedApiKey: pageSpeedApiKey || undefined,
+    });
+  }, [autoRunNonce, isLoading, pageSpeedApiKey, prefillUrl, runPerfAudit, timeoutMs]);
+
+  const handleUrlChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const nextValue = event.target.value;
+    if (prefillUrl && nextValue !== prefillUrl) {
+      onPrefillConsumed?.();
+    }
+    setUrl(nextValue);
+  };
   const handleTimeoutChange = (event: ChangeEvent<HTMLInputElement>) => setTimeoutMs(event.target.value);
   const handleApiKeyChange = (event: ChangeEvent<HTMLInputElement>) =>
     setPageSpeedApiKey(event.target.value);
@@ -81,7 +112,10 @@ export const PerfAuditPanel = () => {
   };
 
   return (
-    <section className="space-y-6 rounded-2xl border border-slate-800 bg-slate-900/50 p-6 shadow-lg">
+    <section
+      id="perf-audit-panel"
+      className="space-y-6 rounded-2xl border border-slate-800 bg-slate-900/50 p-6 shadow-lg"
+    >
       <header className="space-y-1">
         <p className="text-xs font-semibold tracking-[0.3em] text-emerald-400">PERF MONITOR</p>
         <h2 className="text-2xl font-semibold text-white">Run Performance Audit</h2>
@@ -97,7 +131,7 @@ export const PerfAuditPanel = () => {
             <input
               type="url"
               placeholder="https://example.com"
-              value={url}
+              value={activeUrl}
               onChange={handleUrlChange}
               required
               className="w-full rounded-md border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-white placeholder:text-slate-600 focus:border-emerald-400 focus:outline-none"
@@ -128,7 +162,7 @@ export const PerfAuditPanel = () => {
         </div>
 
         <div className="flex items-center gap-3">
-          <Button type="submit" disabled={isLoading || !url} className="min-w-[140px]">
+          <Button type="submit" disabled={isLoading || !activeUrl} className="min-w-[140px]">
             {isLoading ? 'Running…' : 'Run Perf Audit'}
           </Button>
           {errorMessage && <p className="text-sm text-red-400">{errorMessage}</p>}
