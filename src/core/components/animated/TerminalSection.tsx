@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { FormEvent, MouseEvent, useEffect, useMemo, useState } from "react";
 import {
   motion,
   AnimatePresence,
   useMotionValue,
   useTransform,
   useSpring,
-} from 'framer-motion';
-import { AlertTriangle, XCircle, CheckCircle2, Cpu } from 'lucide-react';
-import { cn } from '@/lib/utils';
+} from "framer-motion";
+import { AlertTriangle, XCircle, CheckCircle2, Cpu } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface TerminalSectionProps {
   onRunAudit?: (url: string) => void;
@@ -23,13 +23,15 @@ const ANIMATION_TIMELINE = [
   { step: 5, delay: 8500 },
 ];
 
-const FALLBACK_SITE = 'client-site.com';
+const FALLBACK_SITE = "client-site.com";
 
 const normalizeUrl = (value: string) => {
   const trimmed = value.trim();
   if (!trimmed) return null;
 
-  const candidate = /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+  const candidate = /^https?:\/\//i.test(trimmed)
+    ? trimmed
+    : `https://${trimmed}`;
 
   try {
     return new URL(candidate);
@@ -39,13 +41,13 @@ const normalizeUrl = (value: string) => {
 };
 
 const toCommandTarget = (url: URL) => {
-  const path = url.pathname === '/' ? '' : url.pathname;
+  const path = url.pathname === "/" ? "" : url.pathname;
   return `${url.hostname}${path}`;
 };
 
 export function TerminalSection({ onRunAudit }: TerminalSectionProps) {
   const [step, setStep] = useState(0);
-  const [urlInput, setUrlInput] = useState('');
+  const [urlInput, setUrlInput] = useState("");
   const [inputError, setInputError] = useState<string | null>(null);
   const [targetLabel, setTargetLabel] = useState(FALLBACK_SITE);
   const [lastQueuedTarget, setLastQueuedTarget] = useState<string | null>(null);
@@ -111,7 +113,7 @@ export function TerminalSection({ onRunAudit }: TerminalSectionProps) {
 
     const parsedUrl = normalizeUrl(urlInput);
     if (!parsedUrl) {
-      setInputError('Enter a valid URL (example.com or https://example.com).');
+      setInputError("Enter a valid URL (example.com or https://example.com).");
       return;
     }
 
@@ -121,13 +123,25 @@ export function TerminalSection({ onRunAudit }: TerminalSectionProps) {
     setInputError(null);
     setTargetLabel(nextTarget);
     setLastQueuedTarget(nextTarget);
-    setUrlInput('');
+    setUrlInput("");
     setHasTriggeredRun(true);
     onRunAudit?.(normalized);
   };
 
   const handleInputActivate = () => {
     setIsScoreHidden(true);
+  };
+
+  const handleCancel = (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    setUrlInput("");
+    setInputError(null);
+    setTargetLabel(FALLBACK_SITE);
+    setLastQueuedTarget(null);
+    setHasTriggeredRun(false);
+    setIsScoreHidden(false);
   };
 
   return (
@@ -140,14 +154,14 @@ export function TerminalSection({ onRunAudit }: TerminalSectionProps) {
     >
       <motion.div
         style={{
-          rotateX: isTerminalFocused ? 0 : rotateX,
-          rotateY: isTerminalFocused ? 0 : rotateY,
-          transformStyle: 'preserve-3d',
+          rotateX,
+          rotateY,
+          transformStyle: "preserve-3d",
         }}
         className={cn(
-          'relative overflow-hidden rounded-xl border border-slate-800 bg-slate-950/80 backdrop-blur-xl transition-shadow duration-500',
-          'shadow-[0px_20px_50px_rgba(0,0,0,0.5),0px_4px_14.2px_0px_#D1FAE530]',
-          step >= 5 && 'shadow-[0px_0px_30px_rgba(16,185,129,0.2)]',
+          "py-1 relative overflow-hidden rounded-xl border border-slate-800 bg-slate-950/80 backdrop-blur-xl transition-shadow duration-500",
+          "shadow-[0px_20px_50px_rgba(0,0,0,0.5),0px_4px_14.2px_0px_#D1FAE530]",
+          step >= 5 && "shadow-[0px_0px_30px_rgba(16,185,129,0.2)]",
         )}
       >
         <div className="flex items-center gap-2 border-b border-slate-800 bg-slate-900/50 px-4 py-3">
@@ -161,16 +175,45 @@ export function TerminalSection({ onRunAudit }: TerminalSectionProps) {
           </div>
         </div>
 
-        <div className="flex h-[340px] flex-col gap-4 overflow-hidden p-6 font-mono text-sm">
+        <div className=" flex h-[340px] flex-col overflow-hidden py-2 px-6 font-mono text-sm">
           <AnimatePresence initial={false}>
             {!hasTriggeredRun && (
               <motion.div
                 key="terminal-sequence"
-                initial={{ opacity: 1, y: 0 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -14 }}
-                transition={{ duration: 0.35, ease: 'easeOut' }}
-                className="space-y-4"
+                initial={{
+                  opacity: 1,
+                  height: "auto",
+                  clipPath: "inset(0% 0% 0% 0%)",
+                  filter: "blur(0px)",
+                }}
+                animate={{
+                  opacity: 1,
+                  height: "auto",
+                  clipPath: "inset(0% 0% 0% 0%)",
+                  filter: "blur(0px)",
+                }}
+                exit={{
+                  opacity: 0,
+                  height: 0,
+                  clipPath: "inset(0% 0% 100% 0%)",
+                  filter: "blur(2px)",
+                }}
+                transition={{
+                  opacity: { duration: 0.12, ease: "easeOut" },
+                  filter: { duration: 0.22, ease: "easeOut" },
+                  height: {
+                    duration: 0.34,
+                    delay: 0.22,
+                    ease: [0.4, 0, 0.2, 1],
+                  },
+                  clipPath: {
+                    duration: 0.34,
+                    delay: 0.22,
+                    ease: [0.4, 0, 0.2, 1],
+                  },
+                }}
+                style={{ transformOrigin: "top", overflow: "hidden" }}
+                className=""
               >
                 <div className="flex flex-col space-y-2">
                   <div className="flex items-center text-slate-400">
@@ -181,7 +224,7 @@ export function TerminalSection({ onRunAudit }: TerminalSectionProps) {
                   {step >= 2 && (
                     <motion.div
                       initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
+                      animate={{ opacity: 1, height: "auto" }}
                       className="space-y-1 border-l-2 border-slate-800 pl-4 text-slate-300"
                     >
                       <div className="flex items-center gap-2 text-amber-400">
@@ -190,7 +233,7 @@ export function TerminalSection({ onRunAudit }: TerminalSectionProps) {
                       </div>
                       <div className="flex items-center gap-2 text-red-400">
                         <XCircle className="h-3 w-3" />
-                        <span>ERROR: LCP {'>'} 2.5s (Slow)</span>
+                        <span>ERROR: LCP {">"} 2.5s (Slow)</span>
                       </div>
                     </motion.div>
                   )}
@@ -201,12 +244,15 @@ export function TerminalSection({ onRunAudit }: TerminalSectionProps) {
                     <div className="mt-4 flex items-center text-slate-400">
                       <span className="mr-2 text-emerald-400">➜</span>
                       <span className="mr-2 text-blue-400">~</span>
-                      <TypingEffect text="run optimization_protocol" start={step >= 3} />
+                      <TypingEffect
+                        text="run optimization_protocol"
+                        start={step >= 3}
+                      />
                     </div>
                     {step >= 4 && (
                       <motion.div
                         initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
+                        animate={{ opacity: 1, height: "auto" }}
                         className="space-y-1 border-l-2 border-slate-800 pl-4 text-emerald-400"
                       >
                         <div className="flex items-center gap-2">
@@ -222,33 +268,38 @@ export function TerminalSection({ onRunAudit }: TerminalSectionProps) {
                   </div>
                 )}
 
-                {step >= 4 && step < 5 && (
+                {/* {step >= 4 && step < 5 && (
                   <div className="mt-2 flex items-center gap-2">
                     <span className="text-emerald-400">➜</span>
                     <span className="text-blue-400">~</span>
                     <span className="h-5 w-2.5 animate-pulse bg-slate-400" />
                   </div>
-                )}
+                )} */}
               </motion.div>
             )}
           </AnimatePresence>
 
-          <AnimatePresence initial={false}>
+          <AnimatePresence initial={true}>
             {step >= 5 && (
               <motion.div
                 layout
                 initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
+                animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
+                transition={{
+                  opacity: { duration: 0.22, ease: "easeOut" },
+                  height: { duration: 0.34, ease: "easeOut" },
+                }}
+                style={{ transformOrigin: "top" }}
                 className={cn(
-                  'space-y-2 overflow-hidden',
+                  "space-y-2 overflow-hidden",
                   hasTriggeredRun
-                    ? 'order-first border-b border-slate-800/70 pb-3 pt-0'
-                    : 'mt-5 border-t border-slate-800/70 pt-3',
+                    ? "order-first border-b border-slate-800/70 pb-3 pt-0"
+                    : "mt-4 border-t border-b border-slate-800/70 pt-3 rounded-b-sm",
                 )}
               >
-                <p className="text-[11px] uppercase tracking-wider text-slate-500">
-                  Live URL Input
+                <p className="text-[11px] uppercase font-medium tracking-wider text-slate-500">
+                  Enter Your Website URL For Audit
                 </p>
                 <form
                   onSubmit={handleSubmit}
@@ -267,19 +318,25 @@ export function TerminalSection({ onRunAudit }: TerminalSectionProps) {
                     aria-label="Website URL"
                   />
                   <button
+                    type="button"
+                    onClick={handleCancel}
+                    className="h-9 border-l border-slate-800/90 px-3 text-xs font-semibold text-slate-400 transition-colors hover:text-slate-200"
+                  >
+                    Cancel
+                  </button>
+                  <button
                     type="submit"
-                    className="h-9 border-l border-slate-800/90 px-3 text-xs font-semibold text-emerald-300 transition-colors hover:text-emerald-200"
+                    className="h-9 border-l border-slate-800/90 px-3 text-xs font-semibold text-emerald-300 transition-colors hover:text-emerald-200 cursor-pointer"
                   >
                     Run
                   </button>
                 </form>
-                {inputError ? (
+                {inputError && (
                   <p className="text-[11px] text-red-400">{inputError}</p>
-                ) : (
-                  <p className="text-[11px] text-slate-500">
-                    {lastQueuedTarget
-                      ? `Queued audit for ${lastQueuedTarget}`
-                      : 'Example: example.com'}
+                )}
+                {lastQueuedTarget && (
+                  <p className="text-[12px] font-medium tracking-wider text-slate-500">
+                    {`Queued audit for ${lastQueuedTarget}`}
                   </p>
                 )}
               </motion.div>
@@ -295,11 +352,11 @@ export function TerminalSection({ onRunAudit }: TerminalSectionProps) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.96 }}
             style={{
-              translateZ: '50px',
-              rotateX: isTerminalFocused ? 0 : rotateX,
-              rotateY: isTerminalFocused ? 0 : rotateY,
+              translateZ: "50px",
+              rotateX,
+              rotateY,
             }}
-            transition={{ type: 'spring', stiffness: 200, damping: 15 }}
+            transition={{ type: "spring", stiffness: 200, damping: 15 }}
             className="absolute -bottom-6 right-0 z-20 flex items-center gap-3 rounded-lg border border-emerald-500/30 bg-slate-900 p-4 shadow-2xl md:-right-8"
           >
             <div className="rounded-md bg-emerald-500/20 p-2">
@@ -319,7 +376,7 @@ export function TerminalSection({ onRunAudit }: TerminalSectionProps) {
 }
 
 function TypingEffect({ text, start }: { text: string; start: boolean }) {
-  const [displayedText, setDisplayedText] = useState('');
+  const [displayedText, setDisplayedText] = useState("");
 
   useEffect(() => {
     if (!start) return;
